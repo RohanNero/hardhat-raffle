@@ -35,7 +35,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         ? 1
         : VERIFICATION_BLOCK_CONFIRMATIONS
 
-    log("----------------------------------------------------")
+    log("----------------------------------------------------------")
     const arguments = [
         vrfCoordinatorV2Address,
         subscriptionId,
@@ -52,6 +52,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         waitConfirmations: waitBlockConfirmations,
     })
     log("Raffle Deployed!")
+    log("----------------------------------------------------------")
 
     // Verify the deployment
     if (

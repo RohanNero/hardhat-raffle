@@ -7,7 +7,11 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "hardhat/console.sol";
 
-error Raffle__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
+error Raffle__UpkeepNotNeeded(
+    uint256 currentBalance,
+    uint256 numPlayers,
+    uint256 raffleState
+);
 error Raffle__TransferFailed();
 error Raffle__SendMoreToEnterRaffle();
 error Raffle__RaffleNotOpen();
@@ -104,7 +108,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
-        return (upkeepNeeded, "0x0"); // can we comment this out?
+        return (upkeepNeeded, "0x"); // can we comment this out?
     }
 
     /**
@@ -132,6 +136,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
             NUM_WORDS
         );
         // Quiz... is this redundant?
+        // Yes, because the vrfCoordinator emits the requestId already
         emit RequestedRaffleWinner(requestId);
     }
 
@@ -164,6 +169,22 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     /** Getter Functions */
+    
+    function getVRFCoordinatorV2Address()
+        public
+        view
+        returns (VRFCoordinatorV2Interface)
+    {
+        return i_vrfCoordinator;
+    }
+    function getGasLane() public view returns(bytes32) {
+        return i_gasLane;
+    }
+
+    function getSubscriptionId() public view returns(uint64) {
+        return i_subscriptionId;
+    }
+    
 
     function getRaffleState() public view returns (RaffleState) {
         return s_raffleState;
@@ -199,5 +220,13 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     function getNumberOfPlayers() public view returns (uint256) {
         return s_players.length;
+    }
+
+    function getCallbackGasLimit() public view returns(uint256) {
+        return i_callbackGasLimit;
+    }
+    
+    function getContractBalance() public view returns(uint256) {
+        return address(this).balance;
     }
 }
