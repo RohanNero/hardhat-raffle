@@ -160,6 +160,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         s_players = new address payable[](0);
         s_raffleState = RaffleState.OPEN;
         s_lastTimeStamp = block.timestamp;
+        console.log(s_recentWinner);
         (bool success, ) = recentWinner.call{value: address(this).balance}("");
         // require(success, "Transfer failed");
         if (!success) {

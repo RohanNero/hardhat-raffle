@@ -279,43 +279,46 @@ const {
                   assert(request == 3)
               })
           })
-        //   describe.only("TestHelper for 100% coverage", function () {
-        //       it("should revert if funds aren't transfered to winner", async function () {
-        //           const contractFactory = await ethers.getContractFactory(
-        //               "TestHelper",
-        //               deployer
-        //           )
-        //           //console.log(raffle.address)
-        //           const contract = await contractFactory.deploy(raffle.address)
-        //           await contract.deployed()
-        //           //console.log(contract.address)
-        //           const tx = await contract.enterRaffle({
-        //               value: raffleEntranceFee,
-        //           })
-        //           const player = await raffle.getPlayer(0)
-        //           console.log(player)
-        //           network.provider.send("evm_increaseTime", [
-        //               interval.toNumber() + 1,
-        //           ])
-        //           network.provider.send("evm_mine")
-        //           const txResponse = await raffle.performUpkeep([])
-        //         //   const txReceipt = await txResponse.wait(1)
-        //         //   const requestId = txReceipt.events[1].args.requestId
-        //         //   const players = await raffle.getNumberOfPlayers()
-        //         //   console.log(players.toString())
-        //           console.log(await raffle.getPlayer(0))
-        //           console.log(await raffle.getContractBalance())
-        //           const transactionResponse =
-        //               await vrfCoordinatorV2Mock.fulfillRandomWords(
-        //                   1,
-        //                   raffle.address
-        //               )
-        //           const transactionReceipt = await transactionResponse.wait(1)
-        //           console.log(await raffle.getContractBalance())
-        //         //   console.log(winnerAddr)
-        //           //console.log(transactionResponse)
-        //           const winner = await raffle.getRecentWinner()
-        //           console.log(winner)
-        //       })
-          //})
+
+
+        // I think the tx is reverting correctly, just need to figure out how to listen for the revert custom error()
+          describe.only("TestHelper for 100% coverage", function () {
+              it("should revert if funds aren't transfered to winner", async function () {
+                  const contractFactory = await ethers.getContractFactory(
+                      "TestHelper",
+                      deployer
+                  )
+                  //console.log(raffle.address)
+                  const contract = await contractFactory.deploy(raffle.address)
+                  await contract.deployed()
+                  console.log(`TestHelper Address: ${contract.address}`)
+                  const tx = await contract.enterRaffle({
+                      value: raffleEntranceFee,
+                  })
+                  const player = await raffle.getPlayer(0)
+                  console.log(`Player address: ${player}`)
+                  network.provider.send("evm_increaseTime", [
+                      interval.toNumber() + 1,
+                  ])
+                  network.provider.send("evm_mine")
+                  const txResponse = await raffle.performUpkeep([])
+                  //console.log(`Player address: ${await raffle.getPlayer(0)}`)
+                  const bal = await raffle.getContractBalance()
+                  console.log(`Original balance: ${bal.toString()}`)
+                  //console.log(await raffle.getRecentWinner())
+                  //console.log(raffle)
+                  const transactionResponse =
+                      await vrfCoordinatorV2Mock.fulfillRandomWords(
+                          1,
+                          raffle.address
+                      )
+                  const transactionReceipt = await transactionResponse.wait(1)
+                  const newBal = await raffle.getContractBalance()
+                  console.log(`Updated balance: ${newBal.toString()}`)
+                  // console.log(winnerAddr)
+                  //console.log(transactionResponse)
+                  const winner = await raffle.getRecentWinner()
+                  //console.log(winner)
+              })
+          })
       })

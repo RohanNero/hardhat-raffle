@@ -11,6 +11,7 @@ const FUND_AMOUNT = "1000000000000000000000"
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
+    console.log(deployer)
     const chainId = network.config.chainId
     let vrfCoordinatorV2Address, subscriptionId
 
